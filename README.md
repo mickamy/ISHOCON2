@@ -1,3 +1,5 @@
+mickamy 個人の記録は [zenn](https://zenn.dev/mickamy/articles/dad7d3017a4aa0) か [note.md](./note.md) を参照
+
 <img src="https://user-images.githubusercontent.com/1732016/41643273-b4994c02-74a5-11e8-950d-3a1c1e54f44f.png" width="250px">
 
 © [Chie Hayashi](https://www.facebook.com/hayashichie)
