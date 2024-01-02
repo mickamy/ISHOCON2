@@ -577,3 +577,18 @@ docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 4"
 2024/01/02 23:43:08 投票者の感心がなくなりました
 2024/01/02 23:43:08 {"score": 43824, "success": 33112, "failure": 0}
 ```
+
+- http2 対応 43136
+
+```
+❯ make bench
+docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 4"
+2024/01/02 23:51:52 Start GET /initialize
+2024/01/02 23:51:52 期日前投票を開始します
+2024/01/02 23:51:53 期日前投票が終了しました
+2024/01/02 23:51:53 投票を開始します  Workload: 4
+2024/01/02 23:52:38 投票が終了しました
+2024/01/02 23:52:38 投票者が結果を確認しています
+2024/01/02 23:53:05 投票者の感心がなくなりました
+2024/01/02 23:53:05 {"score": 43136, "success": 32568, "failure": 0}
+```
