@@ -498,3 +498,82 @@ docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 6"
 2024/01/02 09:42:30 {"score": 20442, "success": 15346, "failure": 0}
 ```
 
+---
+
+以下、他の方のブログ等を読んでの対応
+
+---
+
+- 前回の状態で再度ベンチ 36352
+
+```
+❯ make bench
+docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 6"
+2024/01/02 23:23:16 Start GET /initialize
+2024/01/02 23:23:17 期日前投票を開始します
+2024/01/02 23:23:17 期日前投票が終了しました
+2024/01/02 23:23:17 投票を開始します  Workload: 6
+2024/01/02 23:24:03 投票が終了しました
+2024/01/02 23:24:03 投票者が結果を確認しています
+2024/01/02 23:24:31 投票者の感心がなくなりました
+2024/01/02 23:24:31 {"score": 36352, "success": 28576, "failure": 0}
+```
+
+- nginx の worker process は CPU と同じがいいらしい 35176
+
+```
+ishocon@8bb736ded6ff:~$ lscpu | grep CPU
+CPU 操作モード:                      32-bit
+CPU:                                 8
+オンラインになっている CPU のリスト: 0-7
+```
+
+```
+❯ make bench
+docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 6"
+2024/01/02 23:30:27 Start GET /initialize
+2024/01/02 23:30:27 期日前投票を開始します
+2024/01/02 23:30:28 期日前投票が終了しました
+2024/01/02 23:30:28 投票を開始します  Workload: 6
+2024/01/02 23:31:13 投票が終了しました
+2024/01/02 23:31:13 投票者が結果を確認しています
+2024/01/02 23:32:20 投票者の感心がなくなりました
+2024/01/02 23:32:20 {"score": 35176, "success": 29888, "failure": 0}
+```
+
+- unicorn process 調整（とりあえず 8）
+
+nginx に到達できていないっぽい
+
+```
+2024/01/02 23:38:02 Get https://app:443/css/bootstrap.min.css: dial tcp 172.18.0.2:443: connect: cannot assign requested address
+2024/01/02 23:38:02 Get https://app:443/css/bootstrap.min.css: dial tcp 172.18.0.2:443: connect: cannot assign requested address
+2024/01/02 23:38:02 Get https://app:443/css/bootstrap.min.css: dial tcp 172.18.0.2:443: connect: cannot assign requested address
+2024/01/02 23:38:02 Get https://app:443/css/bootstrap.min.css: dial tcp 172.18.0.2:443: connect: cannot assign requested address
+2024/01/02 23:38:02 Get https://app:443/css/bootstrap.min.css: dial tcp 172.18.0.2:443: connect: cannot assign requested address
+2024/01/02 23:38:02 Get https://app:443/: dial tcp 172.18.0.2:443: connect: cannot assign requested address
+2024/01/02 23:38:02 Get https://app:443/: dial tcp 172.18.0.2:443: connect: cannot assign requested address
+2024/01/02 23:38:02 Get https://app:443/candidates/19: dial tcp 172.18.0.2:443: connect: cannot assign requested address
+2024/01/02 23:38:02 Get https://app:443/css/bootstrap.min.css: dial tcp 172.18.0.2:443: connect: cannot assign requested address
+2024/01/02 23:38:02 Get https://app:443/css/bootstrap.min.css: dial tcp 172.18.0.2:443: connect: cannot assign requested address
+2024/01/02 23:38:02 Get https://app:443/css/bootstrap.min.css: dial tcp 172.18.0.2:443: connect: cannot assign requested address
+2024/01/02 23:38:02 Get https://app:443/: dial tcp 172.18.0.2:443: connect: cannot assign requested address
+2024/01/02 23:38:02 Get https://app:443/css/bootstrap.min.css: dial tcp 172.18.0.2:443: connect: cannot assign requested address
+2024/01/02 23:38:32 投票者の感心がなくなりました
+2024/01/02 23:38:32 {"score": -6410, "success": 31845, "failure": 451}
+```
+
+- workload を 4 に変更 43824
+
+```
+❯ make bench
+docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 4"
+2024/01/02 23:41:41 Start GET /initialize
+2024/01/02 23:41:41 期日前投票を開始します
+2024/01/02 23:41:42 期日前投票が終了しました
+2024/01/02 23:41:42 投票を開始します  Workload: 4
+2024/01/02 23:42:27 投票が終了しました
+2024/01/02 23:42:27 投票者が結果を確認しています
+2024/01/02 23:43:08 投票者の感心がなくなりました
+2024/01/02 23:43:08 {"score": 43824, "success": 33112, "failure": 0}
+```
