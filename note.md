@@ -779,7 +779,7 @@ docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 8"
 2024/01/03 04:01:37 {"score": 199340, "success": 142220, "failure": 0}
 ```
 
-- increase unicorn process to 12 
+- increase unicorn process to 12 148263
 
 ```
 ❯ make bench
@@ -792,4 +792,19 @@ docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 8"
 2024/01/03 04:05:47 投票者が結果を確認しています
 2024/01/03 04:06:02 投票者の感心がなくなりました
 2024/01/03 04:06:02 {"score": 148263, "success": 110631, "failure": 0}
+```
+
+- decrease workload to 6 205112
+
+```
+❯ make bench
+docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 6"
+2024/01/03 04:07:25 Start GET /initialize
+2024/01/03 04:07:26 期日前投票を開始します
+2024/01/03 04:07:26 期日前投票が終了しました
+2024/01/03 04:07:26 投票を開始します  Workload: 6
+2024/01/03 04:08:11 投票が終了しました
+2024/01/03 04:08:11 投票者が結果を確認しています
+2024/01/03 04:08:27 投票者の感心がなくなりました
+2024/01/03 04:08:27 {"score": 205112, "success": 144456, "failure": 0}
 ```
