@@ -701,10 +701,19 @@ docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 4"
 
 - posts の時のクエリをまとめる
 
+- unicorn を production に 99150
+
 ```
+❯ make bench
+docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 4"
+2024/01/03 02:00:43 Start GET /initialize
+2024/01/03 02:00:53 期日前投票を開始します
+2024/01/03 02:00:53 期日前投票が終了しました
+2024/01/03 02:00:53 投票を開始します  Workload: 4
+2024/01/03 02:01:39 投票が終了しました
+2024/01/03 02:01:39 投票者が結果を確認しています
+2024/01/03 02:01:54 投票者の感心がなくなりました
+2024/01/03 02:01:54 {"score": 99150, "success": 82350, "failure": 0}
 ```
-
-
-
 
 
