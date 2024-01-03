@@ -1,3 +1,5 @@
+workload = 7
+
 build-base:
 	docker build -f ./docker/app/base/Dockerfile -t showwin/ishocon2_app_base:latest .;
 
@@ -20,13 +22,13 @@ down:
 	docker compose down;
 
 bench:
-	docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 7"
+	docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload $(workload)"
 
 bench-with-db-init: up
 	docker exec -i ishocon2-bench-1 sh -c " \
 		service mysql restart \
 		&& tar -jxvf /root/admin/ishocon2.dump.tar.bz2 && mysql -u root -pishocon ishocon2 < /root/admin/ishocon2.dump \
-		&& ./benchmark --ip app:443 --workload 7 \
+		&& ./benchmark --ip app:443 --workload $(workload) \
 	";
 
 change-lang:
