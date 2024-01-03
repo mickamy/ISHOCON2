@@ -1,6 +1,9 @@
 build-base:
 	docker build -f ./docker/app/base/Dockerfile -t showwin/ishocon2_app_base:latest .;
 
+build-bench:
+	docker build -f ./docker/benchmarker/Dockerfile -t showwin/ishocon2_bench:latest .;
+
 build:
 	docker compose -f ./docker-compose.yml build;
 
