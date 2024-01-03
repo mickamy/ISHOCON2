@@ -716,4 +716,21 @@ docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 4"
 2024/01/03 02:01:54 {"score": 99150, "success": 82350, "failure": 0}
 ```
 
+- 色々やってみた結果
+
+```
+❯ make bench
+docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 4"
+2024/01/03 02:48:12 Start GET /initialize
+2024/01/03 02:48:12 期日前投票を開始します
+2024/01/03 02:48:12 期日前投票が終了しました
+2024/01/03 02:48:12 投票を開始します  Workload: 4
+2024/01/03 02:48:57 投票が終了しました
+2024/01/03 02:48:57 投票者が結果を確認しています
+2024/01/03 02:49:12 Get https://app:443/: write tcp 172.20.0.3:44606->172.20.0.2:443: write: connection reset by peer
+2024/01/03 02:49:12 Get https://app:443/candidates/22: http2: client connection force closed via ClientConn.Close
+2024/01/03 02:49:12 投票者の感心がなくなりました
+2024/01/03 02:49:12 {"score": 222654, "success": 151952, "failure": 2}
+```
+
 
