@@ -607,3 +607,33 @@ docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 4"
 2024/01/02 23:57:01 投票者の感心がなくなりました
 2024/01/02 23:57:01 {"score": 37208, "success": 27504, "failure": 0}
 ```
+
+- なんだかタイムアウトしているリクエストがある
+
+```
+ishocon2-app-1    | 2024-01-03T00:27:45.858106252Z E, [2024-01-03T09:27:45.857011 #488] ERROR -- : worker=4 PID:507 timeout (61s > 60s), killing
+ishocon2-app-1    | 2024-01-03T00:27:45.866902294Z E, [2024-01-03T09:27:45.866792 #488] ERROR -- : reaped #<Process::Status: pid 507 SIGKILL (signal 9)> worker=4
+ishocon2-app-1    | 2024-01-03T00:27:45.867305960Z I, [2024-01-03T09:27:45.867220 #488]  INFO -- : worker=4 spawning...
+ishocon2-app-1    | 2024-01-03T00:27:45.875985877Z I, [2024-01-03T09:27:45.875802 #1109]  INFO -- : worker=4 spawned pid=1109
+ishocon2-app-1    | 2024-01-03T00:27:45.877057835Z I, [2024-01-03T09:27:45.876976 #1109]  INFO -- : worker=4 ready
+```
+
+```
+❯ make bench
+docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 4"
+2024/01/03 00:25:58 Start GET /initialize
+2024/01/03 00:25:59 期日前投票を開始します
+2024/01/03 00:25:59 期日前投票が終了しました
+2024/01/03 00:25:59 投票を開始します  Workload: 4
+2024/01/03 00:26:44 投票が終了しました
+2024/01/03 00:26:44 投票者が結果を確認しています
+2024/01/03 00:26:46 Get https://app:443/css/bootstrap.min.css: write tcp 172.18.0.3:51136->172.18.0.2:443: write: broken pipe
+2024/01/03 00:26:46 Get https://app:443/: http2: client connection force closed via ClientConn.Close
+2024/01/03 00:26:46 Get https://app:443/: http2: client connection force closed via ClientConn.Close
+2024/01/03 00:29:50 投票者の感心がなくなりました
+2024/01/03 00:29:50 {"score": 257090, "success": 151395, "failure": 5}
+```
+
+
+
+

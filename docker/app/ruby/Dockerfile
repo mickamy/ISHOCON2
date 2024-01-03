@@ -37,6 +37,8 @@ COPY --chown=www-data:www-data public /home/ishocon/public
 
 # base をビルドし直しても変更されなかったのでここでも改めてコピーする
 COPY admin/config/nginx.conf /etc/nginx/nginx.conf
+RUN sudo mv /etc/mysql/my.cnf /etc/mysql/my.cnf.org
+COPY /admin/config/my.server.cnf /etc/mysql/my.cnf
 
 # ライブラリのインストール
 RUN cd /home/ishocon/webapp/ruby && \
