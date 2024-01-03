@@ -1,6 +1,6 @@
 #!/bin/bash -eux
 
-sudo mkdir -p /var/nginx/cache_1 /var/nginx/cache_2 /var/nginx/cache_3 /var/nginx/cache_4 /var/nginx/cache_5
+sudo mkdir -p /tmp/cache
 sudo nginx -t
 sudo service nginx start
 sudo service mysql start || true # なぜか失敗する(調査中)

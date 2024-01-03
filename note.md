@@ -733,4 +733,18 @@ docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 4"
 2024/01/03 02:49:12 {"score": 222654, "success": 151952, "failure": 2}
 ```
 
+- nginx: socket 通信と proxy read timeout, keep alive の設定
+
+```
+❯ make bench
+docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 4"
+2024/01/03 03:28:12 Start GET /initialize
+2024/01/03 03:28:13 期日前投票を開始します
+2024/01/03 03:28:13 期日前投票が終了しました
+2024/01/03 03:28:13 投票を開始します  Workload: 4
+2024/01/03 03:28:58 投票が終了しました
+2024/01/03 03:28:58 投票者が結果を確認しています
+2024/01/03 03:29:14 投票者の感心がなくなりました
+2024/01/03 03:29:14 {"score": 169741, "success": 123645, "failure": 0}
+```
 
