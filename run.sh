@@ -23,7 +23,7 @@ function run_ruby() {
   cd "/home/ishocon/webapp/$app_lang"
   sudo rm -rf /tmp/unicorn.pid
   make_tmp_file
-  unicorn -c unicorn_config.rb
+  unicorn -c unicorn_config.rb -E production
 }
 
 function run_python() {

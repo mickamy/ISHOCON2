@@ -102,6 +102,8 @@ SQL
       db.query('ALTER TABLE votes ADD CONSTRAINT FOREIGN KEY (candidate_id) REFERENCES candidates (id)')
       db.query('ALTER TABLE votes ADD INDEX (candidate_id, count DESC)')
       # db.query('ALTER TABLE votes DROP COLUMN keyword')
+      db.query('ALTER TABLE users ADD INDEX (name, address, mynumber)')
+      db.query('ALTER TABLE votes ADD CONSTRAINT FOREIGN KEY (user_id) REFERENCES users (id)')
     end
   end
 
@@ -165,18 +167,25 @@ SQL
   end
 
   post '/vote' do
-    user = db.xquery('SELECT id, votes FROM users WHERE name = ? AND address = ? AND mynumber = ?',
-                     params[:name],
-                     params[:address],
-                     params[:mynumber]).first
+    query = <<SQL
+SELECT u.id, u.votes, IFNULL(SUM(v.count), 0) as voted_count
+FROM users u
+LEFT OUTER JOIN votes v on u.id = v.user_id
+WHERE name = ?
+AND address = ?
+AND mynumber = ?
+GROUP BY u.id
+SQL
+    user = db.xquery(query, params[:name], params[:address], params[:mynumber]).first
     # candidate = db.xquery('SELECT * FROM candidates WHERE name = ?', params[:candidate]).first
     candidate = candidates.find { |c| c[:name] == params[:candidate] }
-    voted_count =
-      user.nil? ? 0 : db.xquery('SELECT IFNULL(SUM(count), 0) AS count FROM votes WHERE user_id = ?', user[:id]).first[:count]
 
-    if voted_count.nil?
-      voted_count = 0
-    end
+
+    voted_count = user ? user[:voted_count] : 0
+    # user.nil? ? 0 : db.xquery('SELECT IFNULL(SUM(count), 0) AS count FROM votes WHERE user_id = ?', user[:id]).first[:count]
+    # if voted_count.nil?
+    #   voted_count = 0
+    # end
 
     # candidates = db.query('SELECT * FROM candidates')
     cs = candidates

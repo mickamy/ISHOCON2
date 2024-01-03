@@ -663,3 +663,48 @@ docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 4"
 2024/01/03 01:19:25 投票者の感心がなくなりました
 2024/01/03 01:19:25 {"score": 193855, "success": 121527, "failure": 0}
 ```
+
+- slow query log を disable 185457
+
+```
+❯ make bench
+docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 4"
+2024/01/03 01:23:30 Start GET /initialize
+2024/01/03 01:23:30 期日前投票を開始します
+2024/01/03 01:23:31 期日前投票が終了しました
+2024/01/03 01:23:31 投票を開始します  Workload: 4
+2024/01/03 01:24:16 投票が終了しました
+2024/01/03 01:24:16 投票者が結果を確認しています
+2024/01/03 01:24:31 投票者の感心がなくなりました
+2024/01/03 01:24:31 {"score": 185457, "success": 115553, "failure": 0}
+```
+
+- ALTER TABLE users ADD INDEX (name, address, mynumber) 198013
+
+```
+❯ make bench
+docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 4"
+2024/01/03 01:25:36 Start GET /initialize
+2024/01/03 01:25:46 期日前投票を開始します
+2024/01/03 01:25:47 期日前投票が終了しました
+2024/01/03 01:25:47 投票を開始します  Workload: 4
+2024/01/03 01:26:32 投票が終了しました
+2024/01/03 01:26:32 投票者が結果を確認しています
+2024/01/03 01:26:34 Get https://app:443/css/bootstrap.min.css: http2: client connection force closed via ClientConn.Close
+2024/01/03 01:26:34 Get https://app:443/css/bootstrap.min.css: write tcp 172.18.0.3:44244->172.18.0.2:443: write: connection reset by peer
+2024/01/03 01:26:34 Get https://app:443/: http2: client connection force closed via ClientConn.Close
+2024/01/03 01:26:41 Get https://app:443/css/bootstrap.min.css: write tcp 172.18.0.3:48946->172.18.0.2:443: write: broken pipe
+2024/01/03 01:26:41 Get https://app:443/css/bootstrap.min.css: http2: client connection force closed via ClientConn.Close
+2024/01/03 01:26:47 投票者の感心がなくなりました
+2024/01/03 01:26:47 {"score": 198013, "success": 122806, "failure": 5}
+```
+
+- posts の時のクエリをまとめる
+
+```
+```
+
+
+
+
+
