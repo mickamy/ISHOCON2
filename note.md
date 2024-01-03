@@ -748,7 +748,7 @@ docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 4"
 2024/01/03 03:29:14 {"score": 169741, "success": 123645, "failure": 0}
 ```
 
-- increase workload to 6
+- increase workload to 6 208031
 
 
 ```
@@ -762,4 +762,19 @@ docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 6"
 2024/01/03 03:59:25 投票者が結果を確認しています
 2024/01/03 03:59:41 投票者の感心がなくなりました
 2024/01/03 03:59:41 {"score": 208031, "success": 147815, "failure": 0}
+```
+
+- increase workload to 8 199340
+
+```
+❯ make bench
+docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 8"
+2024/01/03 04:00:35 Start GET /initialize
+2024/01/03 04:00:36 期日前投票を開始します
+2024/01/03 04:00:37 期日前投票が終了しました
+2024/01/03 04:00:37 投票を開始します  Workload: 8
+2024/01/03 04:01:22 投票が終了しました
+2024/01/03 04:01:22 投票者が結果を確認しています
+2024/01/03 04:01:37 投票者の感心がなくなりました
+2024/01/03 04:01:37 {"score": 199340, "success": 142220, "failure": 0}
 ```
