@@ -98,12 +98,12 @@ SQL
       # db.query('CREATE TABLE IF NOT EXISTS candidate_keywords (id int(11) NOT NULL AUTO_INCREMENT, candidate_id int(11) NOT NULL, content text NOT NULL, PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4')
       # db.query('ALTER TABLE candidate_keywords ADD CONSTRAINT FOREIGN KEY (candidate_id) REFERENCES candidates (id)')
       # db.query('DELETE FROM candidate_keywords')
-      db.query('ALTER TABLE votes ADD COLUMN count int(4) NOT NULL')
-      db.query('ALTER TABLE votes ADD CONSTRAINT FOREIGN KEY (candidate_id) REFERENCES candidates (id)')
-      db.query('ALTER TABLE votes ADD INDEX (candidate_id, count DESC)')
-      # db.query('ALTER TABLE votes DROP COLUMN keyword')
-      db.query('ALTER TABLE users ADD INDEX (name, address, mynumber)')
-      db.query('ALTER TABLE votes ADD CONSTRAINT FOREIGN KEY (user_id) REFERENCES users (id)')
+      # db.query('ALTER TABLE votes ADD COLUMN count int(4) NOT NULL')
+      # db.query('ALTER TABLE votes ADD CONSTRAINT FOREIGN KEY (candidate_id) REFERENCES candidates (id)')
+      # db.query('ALTER TABLE votes ADD INDEX (candidate_id, count DESC)')
+      # # db.query('ALTER TABLE votes DROP COLUMN keyword')
+      # db.query('ALTER TABLE users ADD INDEX (name, address, mynumber)')
+      # db.query('ALTER TABLE votes ADD CONSTRAINT FOREIGN KEY (user_id) REFERENCES users (id)')
     end
   end
 
