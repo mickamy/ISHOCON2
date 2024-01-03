@@ -18,7 +18,7 @@ class Ishocon2::WebApp < Sinatra::Base
     def config
       @config ||= {
         db: {
-          host: ENV['ISHOCON2_DB_HOST'] || 'localhost',
+          host: ENV['ISHOCON2_DB_HOST'] || '127.0.0.1',
           port: ENV['ISHOCON2_DB_PORT'] && ENV['ISHOCON2_DB_PORT'].to_i,
           username: ENV['ISHOCON2_DB_USER'] || 'ishocon',
           password: ENV['ISHOCON2_DB_PASSWORD'] || 'ishocon',
@@ -82,11 +82,11 @@ SQL
 
     def voice_of_supporter(candidate_ids)
       query = <<SQL
-SELECT content as keyword
-FROM candidate_keywords k
-JOIN votes v on k.candidate_id = v.candidate_id
-WHERE k.candidate_id IN (?)
-GROUP BY k.content
+SELECT v.keyword as keyword
+FROM candidates c
+join votes v on c.id = v.candidate_id
+WHERE c.id IN (?)
+group by v.keyword
 ORDER BY IFNULL(SUM(count), 0) DESC
 LIMIT 10
 SQL
@@ -95,19 +95,17 @@ SQL
 
     def db_initialize
       db.query('DELETE FROM votes')
-      db.query('CREATE TABLE IF NOT EXISTS candidate_keywords (id int(11) NOT NULL AUTO_INCREMENT, candidate_id int(11) NOT NULL, content text NOT NULL, PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4')
-      db.query('ALTER TABLE candidate_keywords ADD CONSTRAINT FOREIGN KEY (candidate_id) REFERENCES candidates (id)')
-      db.query('DELETE FROM candidate_keywords')
+      # db.query('CREATE TABLE IF NOT EXISTS candidate_keywords (id int(11) NOT NULL AUTO_INCREMENT, candidate_id int(11) NOT NULL, content text NOT NULL, PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4')
+      # db.query('ALTER TABLE candidate_keywords ADD CONSTRAINT FOREIGN KEY (candidate_id) REFERENCES candidates (id)')
+      # db.query('DELETE FROM candidate_keywords')
       db.query('ALTER TABLE votes ADD COLUMN count int(4) NOT NULL')
       db.query('ALTER TABLE votes ADD CONSTRAINT FOREIGN KEY (candidate_id) REFERENCES candidates (id)')
       db.query('ALTER TABLE votes ADD INDEX (candidate_id, count DESC)')
-      db.query('ALTER TABLE votes DROP COLUMN keyword')
+      # db.query('ALTER TABLE votes DROP COLUMN keyword')
     end
   end
 
   get '/' do
-    cache_control :public, max_age: 60
-
     cs = []
     er = election_results
     er.each_with_index do |r, i|
@@ -136,8 +134,6 @@ SQL
   end
 
   get '/candidates/:id' do
-    cache_control :public, max_age: 60
-
     # candidate = db.xquery('SELECT * FROM candidates WHERE id = ?', params[:id]).first
     candidate = candidates.find { |c| c[:id] == params[:id] }
     return redirect '/' if candidate.nil?
@@ -149,8 +145,6 @@ SQL
   end
 
   get '/political_parties/:name' do
-    cache_control :public, max_age: 60
-
     votes = 0
     election_results.each do |r|
       votes += r[:count] || 0 if r[:political_party] == params[:name]
@@ -199,10 +193,8 @@ SQL
     end
 
     transaction do
-      insert_vote_query = 'INSERT INTO votes (user_id, candidate_id, count) VALUES (?, ?, ?)'
-      db.xquery(insert_vote_query, user[:id], candidate[:id], params[:vote_count].to_i)
-      insert_keyword_query = 'INSERT INTO candidate_keywords (candidate_id, content) VALUES (?, ?)'
-      db.xquery(insert_keyword_query, candidate[:id], params[:keyword])
+      insert_vote_query = 'INSERT INTO votes (user_id, candidate_id, keyword, count) VALUES (?, ?, ?, ?)'
+      db.xquery(insert_vote_query, user[:id], candidate[:id], params[:keyword], params[:vote_count].to_i)
     end
 
     # transaction do
