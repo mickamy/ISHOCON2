@@ -49,7 +49,6 @@ function make_tmp_file() {
 function run_ruby() {
   cd "/home/ishocon/webapp/$app_lang"
   sudo rm -rf /tmp/unicorn.pid
-  make_tmp_file
   bundle exec unicorn -c unicorn_config.rb -E production
 }
 
