@@ -39,7 +39,7 @@ WORKDIR /home/ishocon
 
 RUN cd webapp/ruby && \
     . /home/ishocon/.bashrc && \
-    gem install bundler -v "2.5.3" && \
+    gem install bundler -v "2.5.4" && \
     bundle install
 
 COPY run.sh /home/ishocon/run.sh

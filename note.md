@@ -570,3 +570,18 @@ docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 7"
 2024/01/06 17:24:44 投票者の感心がなくなりました
 2024/01/06 17:24:44 {"score": 272350, "success": 198550, "failure": 0}
 ```
+
+adjust innodb 290598
+
+```
+❯ make bench
+docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 7"
+2024/01/06 17:34:39 Start GET /initialize
+2024/01/06 17:34:39 期日前投票を開始します
+2024/01/06 17:34:39 期日前投票が終了しました
+2024/01/06 17:34:39 投票を開始します  Workload: 7
+2024/01/06 17:35:24 投票が終了しました
+2024/01/06 17:35:24 投票者が結果を確認しています
+2024/01/06 17:35:39 投票者の感心がなくなりました
+2024/01/06 17:35:39 {"score": 290598, "success": 211398, "failure": 0}
+```
