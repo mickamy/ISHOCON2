@@ -14,13 +14,14 @@ RUN PATH="$HOME/.rbenv/bin:$PATH" && \
 # install tools for analyze
 RUN sudo apt-get install -y percona-toolkit
 
+ARG TARGETARCH
+
 # install alp
-RUN curl -L -O https://github.com/tkuchiki/alp/releases/download/v1.0.21/alp_linux_${TARGETARCH}.zip && \
-    unzip alp_linux_amd64.zip && \
+RUN sudo curl -L -O https://github.com/tkuchiki/alp/releases/download/v1.0.21/alp_linux_${TARGETARCH}.zip && \
+    sudo unzip alp_linux_${TARGETARCH}.zip && \
+    sudo rm -rf unzip alp_linux_${TARGETARCH}.zip && \
     sudo mv alp /usr/local/bin/ && \
     alp --version
-
-ARG TARGETARCH
 
 ENV RUBY_YJIT_ENABLE=1
 
