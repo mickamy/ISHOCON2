@@ -19,4 +19,7 @@ RUN cd ~/webapp/go && \
 
 WORKDIR /home/ishocon
 
+# スクリプト配置
+COPY --chown=ishocon:ishocon --chmod=777 scripts/ /home/ishocon/scripts/
+
 COPY run.sh /home/ishocon/run.sh

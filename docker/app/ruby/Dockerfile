@@ -29,7 +29,7 @@ COPY admin/config/nginx.conf /etc/nginx/nginx.conf
 # アプリケーション
 COPY --chown=ishocon:ishocon webapp/ /home/ishocon/webapp
 
-# pt-query-digest 用のスクリプト配置
+# スクリプト配置
 COPY --chown=ishocon:ishocon --chmod=777 scripts/ /home/ishocon/scripts/
 
 WORKDIR /home/ishocon
