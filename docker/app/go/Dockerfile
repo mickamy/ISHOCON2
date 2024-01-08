@@ -26,4 +26,8 @@ WORKDIR /home/ishocon
 # スクリプト配置
 COPY --chown=ishocon:ishocon --chmod=777 scripts/ /home/ishocon/scripts/
 
+# 頻繁に書き換えるファイルのコピー
+COPY admin/config/my.app.cnf /etc/mysql/my.cnf
+COPY admin/config/nginx.conf /etc/nginx/nginx.conf
+
 COPY run.sh /home/ishocon/run.sh
