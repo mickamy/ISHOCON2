@@ -3,16 +3,13 @@ FROM ${BASE_IMAGE}
 
 # Ruby のインストール
 RUN sudo apt-get update && \
-    sudo apt-get install -y ruby-dev libmysqlclient-dev libffi6 libffi-dev libyaml-dev bzip2 && \
+    sudo apt-get install -y ruby-dev libmysqlclient-dev libffi6 libffi-dev libyaml-dev bzip2 percona-toolkit && \
     sudo apt-get clean && \
     git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
 RUN PATH="$HOME/.rbenv/bin:$PATH" && \
     eval "$(rbenv init -)" && \
     git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build && \
     rbenv install 3.2.2 && rbenv rehash && rbenv global 3.2.2
-
-# install tools for analyze
-RUN sudo apt-get install -y percona-toolkit
 
 ARG TARGETARCH
 
