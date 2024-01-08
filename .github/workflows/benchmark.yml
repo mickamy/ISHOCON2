@@ -13,11 +13,11 @@ jobs:
       fail-fast: false
       matrix:
         language:
-          - "crystal"
-          - "go"
-          - "nodejs"
-          - "php"
-          - "python"
+          # - "crystal"
+          # - "go"
+          # - "nodejs"
+          # - "php"
+          # - "python"
           - "ruby"
     env:
       ISHOCON_APP_LANG: ${{ matrix.language }}
@@ -41,7 +41,7 @@ jobs:
           make pull || true
           make build
         timeout-minutes: 20
-      - run: make up bench-with-db-init
+      - run: make up bench-with-db-init WORKLOAD=4
         timeout-minutes: 10
       - name: Dump docker logs
         uses: jwalton/gh-docker-logs@v2

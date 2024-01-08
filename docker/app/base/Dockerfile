@@ -7,7 +7,7 @@ ENV LANG=en_US.UTF-8 \
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update && \
-    apt-get install -y sudo wget less vim tzdata nginx \
+    apt-get install -y sudo wget less vim tzdata nginx htop \
     # 各言語のインストールに必要なもの下準備 \
     curl git gcc make libssl-dev libreadline-dev && \
     apt-get clean
@@ -23,7 +23,6 @@ COPY admin/config/bashrc /home/ishocon/.bashrc
 
 # Nginx の設定
 COPY admin/ssl/ /etc/nginx/ssl/
-COPY admin/config/nginx.conf /etc/nginx/nginx.conf
 
 # MySQL のインストールと dump, cnf の配置
 RUN ["/bin/bash", "-c", "debconf-set-selections <<< 'mysql-server mysql-server/root_password password ishocon'"]
@@ -32,7 +31,6 @@ RUN ["/bin/bash", "-c", "debconf-set-selections <<< 'mysql-service mysql-server/
 RUN apt-get install -y mysql-server
 RUN mkdir -m 777 /home/ishocon/data
 COPY admin/ishocon2.dump.tar.bz2 /home/ishocon/data/ishocon2.dump.tar.bz2
-COPY admin/config/my.app.cnf /etc/mysql/my.cnf
 
 USER ishocon
 

@@ -10,6 +10,7 @@ fi
 
 echo "starting nginx and mysql..."
 cd /home/ishocon
+sudo mkdir -p /var/nginx/cache
 sudo nginx -t
 sudo service nginx start
 sudo chown -R mysql:mysql /var/lib/mysql
@@ -26,6 +27,14 @@ echo "importing data..."
 tar -jxvf ~/data/ishocon2.dump.tar.bz2 -C ~/data && sudo mysql -u root -pishocon ishocon2 < ~/data/ishocon2.dump
 echo "data imported."
 
+echo "modifying db schema..."
+sudo mysql -u root -pishocon ishocon2 < ~/scripts/modify_db_schema.sql
+echo "modifying db schema..."
+
+# data import 時の sloq_query.log を削除
+sudo rm -rf /var/log/mysql/slow_query.log
+sudo touch /var/log/mysql/slow_query.log
+
 check_message="start application w/ ${app_lang}..."
 
 source /home/ishocon/.bashrc
@@ -41,7 +50,7 @@ function run_ruby() {
   cd "/home/ishocon/webapp/$app_lang"
   sudo rm -rf /tmp/unicorn.pid
   make_tmp_file
-  bundle exec unicorn -c unicorn_config.rb
+  bundle exec unicorn -c unicorn_config.rb -E production
 }
 
 function run_python() {
