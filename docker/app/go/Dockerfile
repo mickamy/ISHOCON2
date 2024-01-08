@@ -1,6 +1,10 @@
 ARG BASE_IMAGE=ishocon2-app-base:latest
 FROM ${BASE_IMAGE}
 
+RUN sudo apt-get update && \
+    sudo apt-get install -y percona-toolkit && \
+    sudo apt-get clean
+
 # Go のインストール
 ARG TARGETARCH
 RUN sudo wget -q https://dl.google.com/go/go1.15.8.linux-${TARGETARCH}.tar.gz && \

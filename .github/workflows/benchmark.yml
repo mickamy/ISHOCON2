@@ -14,11 +14,11 @@ jobs:
       matrix:
         language:
           # - "crystal"
-          # - "go"
+          - "go"
           # - "nodejs"
           # - "php"
           # - "python"
-          - "ruby"
+          # - "ruby"
     env:
       ISHOCON_APP_LANG: ${{ matrix.language }}
       UNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
