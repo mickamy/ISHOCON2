@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"html/template"
+	"log"
 	"net/http"
 	"os"
 	"sort"
@@ -41,6 +42,8 @@ func main() {
 	store.Options(sessions.Options{HttpOnly: true})
 	r.Use(sessions.Sessions("showwin_happy", store))
 
+	candidates := getAllCandidate()
+
 	// GET /
 	r.GET("/", func(c *gin.Context) {
 		electionResults := getElectionResult()
@@ -51,7 +54,23 @@ func main() {
 		candidates := tmp[:10]
 		candidates = append(candidates, tmp[len(tmp)-1])
 
-		partyNames := getAllPartyName()
+		partyNameMap := make(map[string]bool)
+		partyNames := []string{}
+		for _, can := range candidates {
+			partyName := can.PoliticalParty
+			if _, value := partyNameMap[partyName]; !value {
+				partyNameMap[partyName] = true
+				partyNames = append(partyNames, partyName)
+			}
+		}
+
+		// Sort partyNames
+		sort.Strings(partyNames)
+
+		// log partyNames value for debug
+		log.Println(partyNames)
+
+		//partyNames := getAllPartyName()
 		partyResultMap := map[string]int{}
 		for _, name := range partyNames {
 			partyResultMap[name] = 0
@@ -93,6 +112,15 @@ func main() {
 	// GET /candidates/:candidateID(int)
 	r.GET("/candidates/:candidateID", func(c *gin.Context) {
 		candidateID, _ := strconv.Atoi(c.Param("candidateID"))
+		//var candidate *Candidate
+		//for _, can := range candidates {
+		//	if can.ID == candidateID {
+		//		candidate = &can
+		//	}
+		//}
+		//if candidate == nil {
+		//	c.Redirect(http.StatusFound, "/")
+		//}
 		candidate, err := getCandidate(candidateID)
 		if err != nil {
 			c.Redirect(http.StatusFound, "/")
@@ -120,10 +148,16 @@ func main() {
 			}
 		}
 
-		candidates := getCandidatesByPoliticalParty(partyName)
+		var candidatesByParty []Candidate
+		for _, can := range candidates {
+			if can.PoliticalParty == partyName {
+				candidatesByParty = append(candidatesByParty, can)
+			}
+		}
+		//candidatesByParty := getCandidatesByPoliticalParty(partyName)
 		candidateIDs := []int{}
-		for _, c := range candidates {
-			candidateIDs = append(candidateIDs, c.ID)
+		for _, can := range candidatesByParty {
+			candidateIDs = append(candidateIDs, can.ID)
 		}
 		keywords := getVoiceOfSupporter(candidateIDs)
 
@@ -131,15 +165,13 @@ func main() {
 		c.HTML(http.StatusOK, "base", gin.H{
 			"politicalParty": partyName,
 			"votes":          votes,
-			"candidates":     candidates,
+			"candidates":     candidatesByParty,
 			"keywords":       keywords,
 		})
 	})
 
 	// GET /vote
 	r.GET("/vote", func(c *gin.Context) {
-		candidates := getAllCandidate()
-
 		r.SetHTMLTemplate(template.Must(template.ParseFiles(layout, "templates/vote.tmpl")))
 		c.HTML(http.StatusOK, "base", gin.H{
 			"candidates": candidates,
@@ -150,9 +182,15 @@ func main() {
 	// POST /vote
 	r.POST("/vote", func(c *gin.Context) {
 		user, userErr := getUser(c.PostForm("name"), c.PostForm("address"), c.PostForm("mynumber"))
+		//var candidate *Candidate
+		//for _, can := range candidates {
+		//	if can.Name == c.PostForm("candidate") {
+		//		candidate = &can
+		//	}
+		//}
 		candidate, cndErr := getCandidateByName(c.PostForm("candidate"))
+
 		votedCount := getUserVotedCount(user.ID)
-		candidates := getAllCandidate()
 		voteCount, _ := strconv.Atoi(c.PostForm("vote_count"))
 
 		var message string
@@ -163,6 +201,7 @@ func main() {
 			message = "投票数が上限を超えています"
 		} else if c.PostForm("candidate") == "" {
 			message = "候補者を記入してください"
+			//} else if candidate == nil {
 		} else if cndErr != nil {
 			message = "候補者を正しく記入してください"
 		} else if c.PostForm("keyword") == "" {
