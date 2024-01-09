@@ -91,3 +91,17 @@ docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 7"
 2024/01/09 10:49:10 {"score": 358429, "success": 236589, "failure": 0}
 ```
 
+GIN をリリースモードで起動 322438
+
+```
+❯ make bench
+docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 7"
+2024/01/09 10:51:49 Start GET /initialize
+2024/01/09 10:51:49 期日前投票を開始します
+2024/01/09 10:51:50 期日前投票が終了しました
+2024/01/09 10:51:50 投票を開始します  Workload: 7
+2024/01/09 10:52:35 投票が終了しました
+2024/01/09 10:52:35 投票者が結果を確認しています
+2024/01/09 10:52:50 投票者の感心がなくなりました
+2024/01/09 10:52:50 {"score": 322438, "success": 216894, "failure": 0}
+```

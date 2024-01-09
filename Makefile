@@ -61,6 +61,9 @@ up:
 up-nod:
 	docker compose up;
 
+restart-app:
+	docker-compose up -d --no-deps;
+
 down:
 	docker compose down;
 
