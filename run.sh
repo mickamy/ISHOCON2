@@ -24,16 +24,18 @@ sudo mysql -u root -pishocon -e 'GRANT ALL ON *.* TO ishocon;'
 echo "mysql user set up completed."
 
 echo "importing data..."
+# data import 時の slow query log は無視する
+sudo mysql -u root -pishocon -e 'set global slow_query_log=0;'
 tar -jxvf ~/data/ishocon2.dump.tar.bz2 -C ~/data && sudo mysql -u root -pishocon ishocon2 < ~/data/ishocon2.dump
+sudo mysql -u root -pishocon -e 'set global slow_query_log=1;'
 echo "data imported."
 
 echo "modifying db schema..."
 sudo mysql -u root -pishocon ishocon2 < ~/scripts/modify_db_schema.sql
 echo "modifying db schema..."
 
-# data import 時の sloq_query.log を削除
-sudo rm -rf /var/log/mysql/slow_query.log
-sudo touch /var/log/mysql/slow_query.log
+# set global による slow query log 設定のクリアのためにリスタート
+sudo service mysql restart
 
 check_message="start application w/ ${app_lang}..."
 
