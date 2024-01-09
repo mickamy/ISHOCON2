@@ -105,3 +105,18 @@ docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 7"
 2024/01/09 10:52:50 投票者の感心がなくなりました
 2024/01/09 10:52:50 {"score": 322438, "success": 216894, "failure": 0}
 ```
+
+go: fix setHTMLTemplate is not thread safe warning 371622
+
+```
+❯ make bench
+docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 7"
+2024/01/10 09:01:50 Start GET /initialize
+2024/01/10 09:01:50 期日前投票を開始します
+2024/01/10 09:01:51 期日前投票が終了しました
+2024/01/10 09:01:51 投票を開始します  Workload: 7
+2024/01/10 09:02:36 投票が終了しました
+2024/01/10 09:02:36 投票者が結果を確認しています
+2024/01/10 09:02:51 投票者の感心がなくなりました
+2024/01/10 09:02:51 {"score": 371622, "success": 246886, "failure": 0}
+```

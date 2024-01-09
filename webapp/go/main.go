@@ -2,12 +2,15 @@ package main
 
 import (
 	"database/sql"
+	"github.com/gin-contrib/multitemplate"
 	"html/template"
-	"log"
+	// "log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/contrib/static"
@@ -24,6 +27,25 @@ func getEnv(key, fallback string) string {
 	return fallback
 }
 
+func createRender() multitemplate.Renderer {
+	r := multitemplate.NewRenderer()
+	pagesPath := "templates/includes"
+
+	layout := "templates/layouts/layout.tmpl"
+	files, err := os.ReadDir(pagesPath)
+	if err != nil {
+		panic(err)
+	}
+	funcs := template.FuncMap{"indexPlus1": func(i int) int { return i + 1 }}
+
+	for _, file := range files {
+		fileNameWithoutExt := strings.TrimSuffix(file.Name(), filepath.Ext(file.Name()))
+		//fileName := file.Name()
+		r.AddFromFilesFuncs(fileNameWithoutExt, funcs, layout, pagesPath+"/"+file.Name())
+	}
+	return r
+}
+
 func main() {
 	// database setting
 	user := getEnv("ISHOCON2_DB_USER", "ishocon")
@@ -35,7 +57,8 @@ func main() {
 	gin.SetMode(gin.DebugMode)
 	r := gin.Default()
 	r.Use(static.Serve("/css", static.LocalFile("public/css", true)))
-	layout := "templates/layout.tmpl"
+
+	r.HTMLRender = createRender()
 
 	// session store
 	store := sessions.NewCookieStore([]byte("mysession"))
@@ -67,9 +90,6 @@ func main() {
 		// Sort partyNames
 		sort.Strings(partyNames)
 
-		// log partyNames value for debug
-		log.Println(partyNames)
-
 		//partyNames := getAllPartyName()
 		partyResultMap := map[string]int{}
 		for _, name := range partyNames {
@@ -100,9 +120,7 @@ func main() {
 			}
 		}
 
-		funcs := template.FuncMap{"indexPlus1": func(i int) int { return i + 1 }}
-		r.SetHTMLTemplate(template.Must(template.New("main").Funcs(funcs).ParseFiles(layout, "templates/index.tmpl")))
-		c.HTML(http.StatusOK, "base", gin.H{
+		c.HTML(http.StatusOK, "index", gin.H{
 			"candidates": candidates,
 			"parties":    partyResults,
 			"sexRatio":   sexRatio,
@@ -129,8 +147,7 @@ func main() {
 		candidateIDs := []int{candidateID}
 		keywords := getVoiceOfSupporter(candidateIDs)
 
-		r.SetHTMLTemplate(template.Must(template.ParseFiles(layout, "templates/candidate.tmpl")))
-		c.HTML(http.StatusOK, "base", gin.H{
+		c.HTML(http.StatusOK, "candidate", gin.H{
 			"candidate": candidate,
 			"votes":     votes,
 			"keywords":  keywords,
@@ -161,8 +178,7 @@ func main() {
 		}
 		keywords := getVoiceOfSupporter(candidateIDs)
 
-		r.SetHTMLTemplate(template.Must(template.ParseFiles(layout, "templates/political_party.tmpl")))
-		c.HTML(http.StatusOK, "base", gin.H{
+		c.HTML(http.StatusOK, "political_party", gin.H{
 			"politicalParty": partyName,
 			"votes":          votes,
 			"candidates":     candidatesByParty,
@@ -172,8 +188,7 @@ func main() {
 
 	// GET /vote
 	r.GET("/vote", func(c *gin.Context) {
-		r.SetHTMLTemplate(template.Must(template.ParseFiles(layout, "templates/vote.tmpl")))
-		c.HTML(http.StatusOK, "base", gin.H{
+		c.HTML(http.StatusOK, "vote", gin.H{
 			"candidates": candidates,
 			"message":    "",
 		})
@@ -194,7 +209,6 @@ func main() {
 		voteCount, _ := strconv.Atoi(c.PostForm("vote_count"))
 
 		var message string
-		r.SetHTMLTemplate(template.Must(template.ParseFiles(layout, "templates/vote.tmpl")))
 		if userErr != nil {
 			message = "個人情報に誤りがあります"
 		} else if user.Votes < voteCount+votedCount {
@@ -213,7 +227,7 @@ func main() {
 			createVote(user.ID, candidate.ID, c.PostForm("keyword"), voteCount)
 			message = "投票に成功しました"
 		}
-		c.HTML(http.StatusOK, "base", gin.H{
+		c.HTML(http.StatusOK, "vote", gin.H{
 			"candidates": candidates,
 			"message":    message,
 		})
