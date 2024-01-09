@@ -2,7 +2,7 @@ ARG BASE_IMAGE=ishocon2-app-base:latest
 FROM ${BASE_IMAGE}
 
 RUN sudo apt-get update && \
-    sudo apt-get install -y percona-toolkit && \
+    sudo apt-get install -y zip percona-toolkit && \
     sudo apt-get clean
 
 # Go のインストール
@@ -14,6 +14,13 @@ ENV PATH $PATH:/usr/local/go/bin
 ENV GOROOT /usr/local/go
 ENV GOPATH /home/ishocon/.local/go
 ENV PATH $PATH:$GOROOT/bin
+
+# install alp
+RUN sudo curl -L -O https://github.com/tkuchiki/alp/releases/download/v1.0.21/alp_linux_${TARGETARCH}.zip && \
+    sudo unzip alp_linux_${TARGETARCH}.zip && \
+    sudo rm -rf unzip alp_linux_${TARGETARCH}.zip && \
+    sudo mv alp /usr/local/bin/ && \
+    alp --version
 
 # アプリケーション
 COPY --chown=ishocon:ishocon webapp/ /home/ishocon/webapp
