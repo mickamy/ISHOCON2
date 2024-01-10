@@ -194,3 +194,18 @@ docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 7"
 2024/01/10 12:12:46 投票者の感心がなくなりました
 2024/01/10 12:12:46 {"score": 410681, "success": 280665, "failure": 0}
 ```
+
+increase nginx worker process 422406
+
+```
+❯ make bench
+docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 7"
+2024/01/10 12:19:37 Start GET /initialize
+2024/01/10 12:19:37 期日前投票を開始します
+2024/01/10 12:19:38 期日前投票が終了しました
+2024/01/10 12:19:38 投票を開始します  Workload: 7
+2024/01/10 12:20:23 投票が終了しました
+2024/01/10 12:20:23 投票者が結果を確認しています
+2024/01/10 12:20:38 投票者の感心がなくなりました
+2024/01/10 12:20:38 {"score": 422406, "success": 294902, "failure": 0}
+```
