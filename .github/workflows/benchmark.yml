@@ -18,7 +18,7 @@ jobs:
           # - "nodejs"
           # - "php"
           # - "python"
-          # - "ruby"
+          - "ruby"
     env:
       ISHOCON_APP_LANG: ${{ matrix.language }}
       UNAME: ${{ vars.DOCKER_HUB_USERNAME }}
