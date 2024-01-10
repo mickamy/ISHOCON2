@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"github.com/gin-contrib/multitemplate"
 	"html/template"
-	// "log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -13,7 +12,6 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/contrib/sessions"
-	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -56,8 +54,8 @@ func main() {
 
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.New()
+	//r := gin.Default()
 	r.Use(gin.Recovery())
-	r.Use(static.Serve("/css", static.LocalFile("public/css", true)))
 
 	r.HTMLRender = createRender()
 
@@ -239,6 +237,7 @@ func main() {
 
 	r.GET("/initialize", func(c *gin.Context) {
 		db.Exec("DELETE FROM votes")
+		db.Exec("DELETE FROM candidate_keywords")
 
 		c.String(http.StatusOK, "Finish")
 	})
