@@ -1,5 +1,4 @@
 #!/bin/bash -eux
 
-rm -rf sloq-query.log.analyzed
-pt-query-digest --type slowlog /var/log/mysql/slow-query.log > slow-query.log.analyzed
-rm -rf /var/log/mysql/slow-query.log
+pt-query-digest --type slowlog /var/log/mysql/slow_query.log | tee "../digetst_$(date +%Y%m%d%H%M).log"
+rm -rf /var/log/mysql/slow_query.log
