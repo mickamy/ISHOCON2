@@ -64,7 +64,7 @@ function run_python() {
 function run_go() {
   cd "/home/ishocon/webapp/$app_lang"
   make_tmp_file
-  GIN_MODE=release /tmp/go/webapp
+  /tmp/go/webapp
 }
 
 function run_php() {
