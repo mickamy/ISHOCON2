@@ -150,7 +150,7 @@ docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 7"
 2024/01/10 11:04:50 {"score": 344721, "success": 233409, "failure": 0}
 ```
 
-content_keyword の導入 361385
+content_keyword の導入 and increase connection pools of DB to 12 361385
 
 ```
 ❯ make bench
@@ -163,4 +163,19 @@ docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 7"
 2024/01/10 11:32:08 投票者が結果を確認しています
 2024/01/10 11:32:23 投票者の感心がなくなりました
 2024/01/10 11:32:23 {"score": 361385, "success": 240017, "failure": 0}
+```
+
+disable gin logging 422739
+
+```
+❯ make bench
+docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 7"
+2024/01/10 11:35:30 Start GET /initialize
+2024/01/10 11:35:30 期日前投票を開始します
+2024/01/10 11:35:30 期日前投票が終了しました
+2024/01/10 11:35:30 投票を開始します  Workload: 7
+2024/01/10 11:36:15 投票が終了しました
+2024/01/10 11:36:15 投票者が結果を確認しています
+2024/01/10 11:36:30 投票者の感心がなくなりました
+2024/01/10 11:36:30 {"score": 422739, "success": 293819, "failure": 0}
 ```
