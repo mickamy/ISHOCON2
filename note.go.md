@@ -135,3 +135,17 @@ docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 7"
 2024/01/10 09:20:11 投票者の感心がなくなりました
 2024/01/10 09:20:11 {"score": 381180, "success": 256388, "failure": 0}
 ```
+
+middleware: disable logs 344721
+
+```
+❯ make bench
+docker exec -i ishocon2-bench-1 sh -c "./benchmark --ip app:443 --workload 7"
+2024/01/10 10:59:18 期日前投票を開始します
+2024/01/10 10:59:19 期日前投票が終了しました
+2024/01/10 10:59:19 投票を開始します  Workload: 7
+2024/01/10 11:04:35 投票が終了しました
+2024/01/10 11:04:35 投票者が結果を確認しています
+2024/01/10 11:04:50 投票者の感心がなくなりました
+2024/01/10 11:04:50 {"score": 344721, "success": 233409, "failure": 0}
+```
