@@ -52,10 +52,11 @@ func main() {
 	pass := getEnv("ISHOCON2_DB_PASSWORD", "ishocon")
 	dbname := getEnv("ISHOCON2_DB_NAME", "ishocon2")
 	db, _ = sql.Open("mysql", user+":"+pass+"@/"+dbname)
-	db.SetMaxIdleConns(5)
+	db.SetMaxIdleConns(12)
 
 	gin.SetMode(gin.ReleaseMode)
-	r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Recovery())
 	r.Use(static.Serve("/css", static.LocalFile("public/css", true)))
 
 	r.HTMLRender = createRender()
@@ -224,7 +225,10 @@ func main() {
 			//for i := 1; i <= voteCount; i++ {
 			//	createVote(user.ID, candidate.ID, c.PostForm("keyword"))
 			//}
-			createVote(user.ID, candidate.ID, c.PostForm("keyword"), voteCount)
+			err := createVote(c, user.ID, candidate.ID, c.PostForm("keyword"), voteCount)
+			if err != nil {
+				panic(err)
+			}
 			message = "投票に成功しました"
 		}
 		c.HTML(http.StatusOK, "vote", gin.H{
